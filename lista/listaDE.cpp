@@ -44,6 +44,27 @@ void sort2(nodeDE* &list, int data){
     }
 */
 
+void insert2(nodeDE* &list, int data){
+    nodeDE* nuevo_nodo = new nodeDE;
+    nuevo_nodo->data = data;
+    if ((list == NULL) || (data < list->data))
+    { // inserta el elemento al principio
+        nuevo_nodo->next = list;
+        if (list != NULL)
+            list->back = nuevo_nodo;
+        list = nuevo_nodo;
+    } else {
+        nodeDE* aux = list;
+        while((aux->next != NULL) && (aux->next->data < data))
+            aux = aux->next;
+        nuevo_nodo->next = aux->next;
+        nuevo_nodo->back = aux;
+        if (aux->next != NULL)
+            aux->next->back = nuevo_nodo;
+        aux->next = nuevo_nodo;
+    }
+}
+
 void sorted_insert(nodeDE* &list, int data){
     if (list == NULL){
         list = new nodeDE;
@@ -83,12 +104,7 @@ void getNodes(nodeDE* list){
 int main(int argc, const char** argv) {
     nodeDE* list = NULL;
     for (int i = 1; i < 5; i++)
-        sorted_insert(list, i*2);
-
-    sorted_insert(list,7);
-    sorted_insert(list,5);
-    sorted_insert(list,1);
-    sorted_insert(list,3);
+        insert2(list,i*2);
     getNodes(list);
     return 0;
 }
