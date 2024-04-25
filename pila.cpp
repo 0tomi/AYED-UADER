@@ -24,6 +24,10 @@ struct pila{
         };
 };
 
+void sorted_insert(pila* &p, int data){
+    pila
+}
+
 int main(int argc, char const *argv[])
 {
     pila* piloide = NULL;
