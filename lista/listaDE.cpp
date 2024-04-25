@@ -43,6 +43,7 @@ void sort2(nodeDE* &list, int data){
         }
     }
 */
+
 void sorted_insert(nodeDE* &list, int data){
     if (list == NULL){
         list = new nodeDE;
@@ -84,9 +85,9 @@ int main(int argc, const char** argv) {
     for (int i = 1; i < 5; i++)
         sorted_insert(list, i*2);
 
-    sorted_insert(list,1);
     sorted_insert(list,7);
     sorted_insert(list,5);
+    sorted_insert(list,1);
     sorted_insert(list,3);
     getNodes(list);
     return 0;
