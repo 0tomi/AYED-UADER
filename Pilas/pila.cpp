@@ -1,37 +1,58 @@
-#include <iostream>
-
-using namespace std;
-
-struct pila{
-        int dato;
-        pila *link = NULL;
-
-        bool agregar(int dato, pila* &prox) { 
-            pila* aux = new pila;
-            if (aux == NULL)
-                return false;
-            aux->dato = dato;
-            aux->link = prox;
-            prox = aux;
-            return true;
-        }
-        int obtener(pila* &ant){
-            int dato = ant->dato;
-            pila* aux = ant;
-            ant = ant->link;
-            delete aux;
-            return dato;
-        };
-};
-
-void sorted_insert(pila* &p, int data){
-    pila
+#include "pila.h"
+nodeStack::nodeStack(int dato)
+{
+    this->dato = dato;
 }
 
-int main(int argc, char const *argv[])
+int nodeStack::getDato()
 {
-    pila* piloide = NULL;
-    piloide->agregar(5,piloide);
-    cout << piloide->obtener(piloide);
-    return 0;
+    return this->dato;
+}
+
+Pila::Pila()
+{
+    this->last = nullptr;
+    this->size = 0;
+}
+
+Pila::Pila(int data)
+{
+    this->last = new nodeStack(data);
+    this->size = 1;
+}
+
+int Pila::getSize()
+{
+    return this->size;
+}
+
+int Pila::pop()
+{
+    if (this->last == nullptr)
+        return -1;
+    else{
+        int aux = this->last->getDato();
+        nodeStack* aux2 = this->last;
+        this->last = aux2->previous;
+
+        delete aux2;
+        return aux;
+    }
+}
+
+bool Pila::insert(int data)
+{
+    nodeStack* aux = new nodeStack(data);
+    if (aux == nullptr)
+        return false;
+    aux->previous = last;
+    last = aux;
+    this->size++;
+    return true;
+}
+
+Pila::~Pila()
+{
+    while (last != nullptr)
+        this->pop();
 }
