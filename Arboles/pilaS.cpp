@@ -1,3 +1,7 @@
+/* 
+    Pila hecha con structs en vez de orientado a objetos
+*/
+
 struct nodoPila{
     int dato;
     nodoPila* link = nullptr;
