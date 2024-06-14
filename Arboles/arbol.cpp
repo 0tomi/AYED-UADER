@@ -46,22 +46,41 @@ nodeArbol* pop(nodoPila* &pila){
 
 // Codigo de arboles
 
+void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){     // Es capaz de reacomodar el arbol en caso de organizarlo mal (no me gusta como quedo)
+    nodeArbol* newnode = new nodeArbol;
+    newnode->dato = nuevoDato;
+    if (arbol == nullptr)
+        arbol = newnode;
+    else if (arbol->izq != nullptr && (arbol->izq->dato < nuevoDato && arbol->dato > nuevoDato)){
+            nodeArbol* aux = arbol;
+            arbol = newnode;
+            arbol->izq = aux->izq;
+            arbol->der = aux;
+            aux->izq = nullptr;
+    }
+    else  if (nuevoDato < arbol->dato)
+        BTinsert_V2(arbol->izq, nuevoDato);
+    else if (nuevoDato > arbol->dato)
+        BTinsert_V2(arbol->der, nuevoDato);
+}
+
 void BTinsert(nodeArbol* &arbol, int data){
     nodeArbol* node = new nodeArbol;
     node->dato = data;
     if (arbol == nullptr)
         arbol = node;
-    else{
-        if (data < arbol->dato)
-            BTinsert(arbol->izq, data);
-        else if (data > arbol->dato)
-            BTinsert(arbol->der, data);
-    }
+        
+    else if (data < arbol->dato)
+        BTinsert(arbol->izq, data);
+    else if (data > arbol->dato)
+        BTinsert(arbol->der, data);
 }
 
 bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node){
-    if (arbol != nullptr){
-        if (arbol->dato == data){
+    if (arbol == nullptr)
+        return false;
+    else {
+        if (data == arbol->dato){
             node = arbol;
             return true;
         }    
@@ -70,8 +89,6 @@ bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node){
         else 
             BTlook(arbol->der, data, node);
     }
-    
-    return false;
 }
 
 bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node, nodeArbol* &father){
@@ -109,6 +126,30 @@ void BarridoRID(nodeArbol* arbol){
     }
 }
 
+void BarridoRID_Rec(nodeArbol* arbol){  // Barrido Preorden Recursivo
+    if (arbol != nullptr){
+        cout << arbol->dato << " ";
+        BarridoRID_Rec(arbol->izq);
+        BarridoRID_Rec(arbol->der);
+    }
+}
+
+void BarridoIRD_Rec(nodeArbol* arbol){  // Barrido InOrden Recursivo
+    if (arbol != nullptr){
+        BarridoIRD_Rec(arbol->izq);
+        cout << arbol->dato << " ";
+        BarridoIRD_Rec(arbol->der);
+    }
+}
+
+void BarridoIDR_Rec(nodeArbol* arbol){  // Barrido PostOrden Recursivo
+    if (arbol != nullptr){
+        BarridoIDR_Rec(arbol->izq);
+        BarridoIDR_Rec(arbol->der);
+        cout << arbol->dato << " ";
+    }
+}
+
 int main(int argc, const char** argv) {
     nodeArbol* arbol = nullptr;
     BTinsert(arbol, 7);
@@ -118,9 +159,14 @@ int main(int argc, const char** argv) {
     BTinsert(arbol, 18);
     BTinsert(arbol, 8);
     BTinsert(arbol, 1);
-    BTinsert(arbol, 2);
+    BTinsert_V2(arbol, 2);
     nodeArbol* auxiliar; 
-    if (BTlook(arbol, 18, auxiliar));
-        BarridoRID(arbol);
+
+    BarridoRID(arbol);
+    cout << endl;
+    BarridoIDR_Rec(arbol);
+
+    if (BTlook(arbol, 1, auxiliar))
+        cout << endl << auxiliar->der->dato;
     return 0;
 }
