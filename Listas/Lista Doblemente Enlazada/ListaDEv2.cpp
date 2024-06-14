@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -39,7 +40,14 @@ void sorted_insert(nodeDE* &lista, int nuevoDato){
           lista->back = newNode;
         lista = newNode;
     } else {
-
+        nodeDE* aux = lista;
+        while(aux->next != NULL && aux->next->data > nuevoDato){
+            newNode->next = aux->next;
+            newNode->back = aux;
+            if (aux->next != NULL)
+                aux->next->back = newNode;
+            aux->next = newNode;
+        }
     }
 }
 
@@ -76,17 +84,40 @@ bool delete_node(int data, nodeDE* &lista){
 }
 
 // Eliminar la lista
-bool deleteList(nodeDE* &lista){
-
+void deleteList(nodeDE* &lista){
+    nodeDE* aux;
+    while (lista != NULL){
+        aux = lista;
+        lista = lista->next;
+        delete aux;
+    }
 }
 
 // Ordenar lista
-void sortList(nodeDE* lista){
+void sortList(nodeDE* &lista){
+    nodeDE* aux = lista;
+    nodeDE* newlist = NULL;
+    while(aux != NULL){
+        sorted_insert(newlist, aux->data);
+        aux = aux->next;
+    }
+    deleteList(lista);
+    lista = newlist;
+}
 
+void MostrarLista(nodeDE* lista){
+    while(lista != NULL)
+        cout << lista->data << " ";
 }
 
 int main(int argc, char const *argv[])
 {
-    /* code */
+    nodeDE* lista = NULL;
+    srand(1);
+    for (int i = 0; i < 10; i++)
+        insert(lista,rand()%100);
+
+    MostrarLista(lista);
+
     return 0;
 }
