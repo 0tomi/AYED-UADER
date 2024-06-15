@@ -46,7 +46,8 @@ nodeArbol* pop(nodoPila* &pila){
 
 // Codigo de arboles
 
-void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){     // Es capaz de reacomodar el arbol en caso de organizarlo mal (no me gusta como quedo)
+// Inserta nodos y es capaz de reacomodar el arbol en caso de organizarlo mal (no me gusta como quedo)
+void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){     
     nodeArbol* newnode = new nodeArbol;
     newnode->dato = nuevoDato;
     if (arbol == nullptr)
@@ -64,6 +65,7 @@ void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){     // Es capaz de reacomoda
         BTinsert_V2(arbol->der, nuevoDato);
 }
 
+// Inserta nodos en el arbol
 void BTinsert(nodeArbol* &arbol, int data){
     nodeArbol* node = new nodeArbol;
     node->dato = data;
@@ -76,6 +78,7 @@ void BTinsert(nodeArbol* &arbol, int data){
         BTinsert(arbol->der, data);
 }
 
+// Busca un dato en el arbol binario y avisa si lo encontro, ademas de devolver el nodo
 bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node){
     if (arbol == nullptr)
         return false;
@@ -91,6 +94,7 @@ bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node){
     }
 }
 
+// Lo mismo que la anterior pero sin recursividad, y ademas devuelve el nodo y su padre
 bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node, nodeArbol* &father){
     node = father = nullptr;
     if (arbol != nullptr){    
@@ -107,6 +111,7 @@ bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node, nodeArbol* &father){
     return false;
 }
 
+// Hace un barrido RID y muestra las cosas, pero donde dice procesamiento se pueden implementar mas cosas
 void BarridoRID(nodeArbol* arbol){
     if (arbol == nullptr)
         cout << "Arbol vacio";
@@ -115,6 +120,7 @@ void BarridoRID(nodeArbol* arbol){
         insert(pila,arbol);
         while (!(isEmpty(pila))){
             aux = pop(pila);
+
             // Procesamiento
             cout << aux->dato << " ";
             
