@@ -13,7 +13,7 @@ bool isEmpty(nodoPila* pila){
     return false;
 }
 
-void insert(nodoPila* &pila, int dato){
+void Pila_push(nodoPila* &pila, int dato){
     nodoPila* nuevoNodo = new nodoPila;
     nuevoNodo->dato = dato;
     if (pila == nullptr)
@@ -24,7 +24,7 @@ void insert(nodoPila* &pila, int dato){
     }
 }
 
-int pop(nodoPila* &pila){
+int Pila_pop(nodoPila* &pila){
     if (isEmpty(pila))
         return 0;
 

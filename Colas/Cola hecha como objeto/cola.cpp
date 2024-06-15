@@ -2,7 +2,7 @@
 
 cola::cola()
 {
-    this->frente = nullptr; 
+    this->frente = nullptr;
     this->fondo = nullptr;
     this->length = 0;
 }
@@ -24,22 +24,22 @@ bool cola::add(int data)
 {
     nodeC* aux = new nodeC(data);
 
-    if (frente == nullptr && fondo == nullptr){
-        frente = aux;
-        fondo = aux;
+    if (this->frente == nullptr){
+        this->frente = aux;
+        this->fondo = aux;
         this->length++;
         return true;
     }
 
     fondo->next = aux;
-    fondo = aux;
-
+    this->fondo = aux;
+    this->length++;
     return true;
 }
 
 int cola::get()
 {
-    if (length == 0)
+    if (frente == nullptr)
         return -1;
     nodeC* aux = frente;
 
