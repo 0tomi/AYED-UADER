@@ -17,6 +17,13 @@ struct nodeDE{
     nodeDE* back = NULL;
 };
 
+void MostrarLista(nodeDE* lista){
+    while(lista != NULL){
+        cout << lista->data << " ";
+        lista = lista->next;
+    }
+}
+
 // Insertar sin orden
 void insert(nodeDE* &lista, int nuevoDato){
     nodeDE* newNode = new nodeDE;
@@ -41,23 +48,25 @@ void sorted_insert(nodeDE* &lista, int nuevoDato){
         lista = newNode;
     } else {
         nodeDE* aux = lista;
-        while(aux->next != NULL && aux->next->data > nuevoDato){
-            newNode->next = aux->next;
-            newNode->back = aux;
-            if (aux->next != NULL)
-                aux->next->back = newNode;
-            aux->next = newNode;
-        }
+        while(aux->next != NULL && nuevoDato > aux->next->data)
+            aux = aux->next;
+        newNode->next = aux->next;
+        newNode->back = aux;
+        if (aux->next != NULL)
+            aux->next->back = newNode;
+        aux->next = newNode;
     }
 }
 
 // Buscar un dato
 bool lookfor(int data, nodeDE* lista, nodeDE* &node){
-    while(lista->next != NULL)
+    while(lista->next != NULL){
         if (lista->data == data){
             node = lista;
             return true;
         }
+        lista = lista->next;
+    }
     
     return false;
 }
@@ -105,11 +114,6 @@ void sortList(nodeDE* &lista){
     lista = newlist;
 }
 
-void MostrarLista(nodeDE* lista){
-    while(lista != NULL)
-        cout << lista->data << " ";
-}
-
 int main(int argc, char const *argv[])
 {
     nodeDE* lista = NULL;
@@ -117,6 +121,11 @@ int main(int argc, char const *argv[])
     for (int i = 0; i < 10; i++)
         insert(lista,rand()%100);
 
+    cout << "Lista desordenada: ";
+    MostrarLista(lista);
+
+    sortList(lista);
+    cout << "\nLista ordenada: ";
     MostrarLista(lista);
 
     return 0;
