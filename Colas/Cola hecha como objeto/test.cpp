@@ -5,8 +5,10 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    cola test(5);
+    cola test;
     test.add(6);
-    cout << test.size();
+    test.add(10);
+
+   
     return 0;
 }
