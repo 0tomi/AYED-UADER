@@ -1,51 +1,14 @@
 #include <iostream>
+#include "colaypilaparaArbol.cpp"
+
+/*
+    Funciones para manejar un arbol, el nodo del arbol 
+    esta definido en el cpp "cola y pila para arbol".
+*/
 
 using namespace std;
 
-struct nodeArbol{
-    int dato;
-    nodeArbol* izq = nullptr;
-    nodeArbol* der = nullptr;
-};
-
-// Codigo de pilas
-
-struct nodoPila{
-    nodeArbol* dato;
-    nodoPila* link = nullptr;
-};
-
-bool isEmpty(nodoPila* pila){
-    if (pila == nullptr)
-        return true;
-    return false;
-}
-
-void insert(nodoPila* &pila, nodeArbol* dato){
-    nodoPila* nuevoNodo = new nodoPila;
-    nuevoNodo->dato = dato;
-    if (pila == nullptr)
-        pila = nuevoNodo;
-    else{
-        nuevoNodo->link = pila;
-        pila = nuevoNodo;
-    }
-}
-
-nodeArbol* pop(nodoPila* &pila){
-    if (isEmpty(pila))
-        return 0;
-
-    nodeArbol* dato = pila->dato;
-    nodoPila* nodoAremover = pila;
-    pila = pila->link;
-
-    delete nodoAremover;
-    return dato;
-}
-
-// Codigo de arboles
-
+// ####### Codigo de arboles ########
 // Inserta nodos y es capaz de reacomodar el arbol en caso de organizarlo mal (no me gusta como quedo)
 void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){     
     nodeArbol* newnode = new nodeArbol;
@@ -117,7 +80,7 @@ void BarridoRID(nodeArbol* arbol){
         cout << "Arbol vacio";
     else{
         nodoPila* pila = nullptr; nodeArbol* aux;
-        insert(pila,arbol);
+        push(pila,arbol);
         while (!(isEmpty(pila))){
             aux = pop(pila);
 
@@ -125,9 +88,30 @@ void BarridoRID(nodeArbol* arbol){
             cout << aux->dato << " ";
             
             if (aux->der != nullptr)
-                insert(pila,aux->der);
+                push(pila,aux->der);
             if (aux->izq != nullptr)
-                insert(pila,aux->izq);
+                push(pila,aux->izq);
+        }
+    }
+}
+
+void BarridoPorNiveles(nodeArbol* arbol){
+    if (arbol == nullptr)
+        cout << "Arbol vacio";
+    else{
+        nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
+        nodeArbol* aux;
+        insert(frente,fondo,arbol);
+        while (!ColaVacia(frente)){
+            aux = get(frente,fondo);
+
+            // Procesamiento
+            cout << aux->dato << " ";
+            
+            if (aux->izq != nullptr)
+                insert(frente,fondo,aux->izq);
+            if (aux->der != nullptr)
+                insert(frente,fondo,aux->der);
         }
     }
 }
@@ -171,6 +155,8 @@ int main(int argc, const char** argv) {
     BarridoRID(arbol);
     cout << endl;
     BarridoIDR_Rec(arbol);
+    cout << "\nBarrido por niveles: ";
+    BarridoPorNiveles(arbol);
 
     if (BTlook(arbol, 1, auxiliar))
         cout << endl << auxiliar->der->dato;

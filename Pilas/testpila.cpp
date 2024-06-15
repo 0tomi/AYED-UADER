@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    nodoPila* pila = NULL;
+    nodoPila* pila = nullptr;
     insert(pila, 5);
     insert(pila, 6);
     cout << pop(pila);

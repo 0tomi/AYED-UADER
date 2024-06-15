@@ -11,6 +11,12 @@ struct nodoCola{
     int dato;
 };
 
+bool ColaVacia(nodoCola* frente){
+    if (frente == nullptr)
+        return true;
+    return false;
+}
+
 // Agrega nodos a la cola
 void add(nodoCola* &frente, nodoCola* &fondo, int nuevoDato){
     nodoCola* nuevoNodo = new nodoCola;
