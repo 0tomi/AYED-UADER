@@ -1,5 +1,6 @@
 #ifndef COLA_H
 #define COLA_H
+
 class nodeC{
 public:
     int getData();
@@ -14,13 +15,14 @@ class cola
 public:
     cola();
     cola(int data);
-    int getSize();
-    bool push(int data);
-    int pop();
+    int size();
+    bool add(int data);
+    int get();
     ~cola();
 private:
-    nodeC* first;
-    int size;
+    nodeC* frente;
+    nodeC* fondo;
+    int length;
 };
 
 #endif // COLA_H
