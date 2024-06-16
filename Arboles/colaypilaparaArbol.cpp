@@ -43,6 +43,7 @@ nodeArbol* pop(nodoPila* &pila){
 // Codigo para COLAS
 struct nodoCola{
     nodeArbol* nodo;    // Informacion de la pila
+    int altura;         // Altura del nodo que guarda, lo uso para un ejercicio
     nodoCola* link = nullptr;
 };
 
@@ -63,9 +64,39 @@ void insert(nodoCola* &frente, nodoCola* &fondo, nodeArbol* nodo){
     }
 }
 
+// Inserta tambien la altura
+void insert(nodoCola* &frente, nodoCola* &fondo, nodeArbol* nodo, int altura){
+    nodoCola* nuevo_nodo = new nodoCola;
+    nuevo_nodo->nodo = nodo;
+    nuevo_nodo->altura = altura;
+    if (ColaVacia(frente))
+        frente = fondo = nuevo_nodo;
+    else {
+        fondo->link = nuevo_nodo;
+        fondo = nuevo_nodo;
+    }
+}
+
 nodeArbol* get(nodoCola* &frente, nodoCola* &fondo){
     if (!ColaVacia(frente)){
         nodeArbol* nodo = frente->nodo;
+        nodoCola* aux = frente;
+
+        if (frente == fondo)
+            fondo = nullptr;
+
+        frente = frente->link;
+        delete aux;
+        return nodo;
+    }
+    return nullptr;
+}
+
+// Obtiene tambien la altura
+nodeArbol* get(nodoCola* &frente, nodoCola* &fondo, int &altura){
+    if (!ColaVacia(frente)){
+        nodeArbol* nodo = frente->nodo;
+        altura = frente->altura;
         nodoCola* aux = frente;
 
         if (frente == fondo)

@@ -116,6 +116,35 @@ void BarridoPorNiveles(nodeArbol* arbol){
     }
 }
 
+void BPNv2(nodeArbol* arbol){   // Barrido por niveles, pero indicando la el nivel.
+    if (arbol == nullptr)
+        cout << "Arbol vacio";
+    else{
+        int altura = 0, alturaActual;
+        nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
+        nodeArbol* aux;
+        insert(frente,fondo,arbol,altura);
+        cout << "Nodo rey: ";
+        while (!ColaVacia(frente)){
+            aux = get(frente,fondo, alturaActual);
+
+            // Procesamiento
+            if (altura != alturaActual)
+                cout << "\nNivel " << altura+1 << ": ";
+            cout << aux->dato << " ";
+
+            // Obtener actura actual
+            if (altura < alturaActual)
+                altura = alturaActual;
+            
+            if (aux->izq != nullptr)
+                insert(frente,fondo,aux->izq,altura+1);
+            if (aux->der != nullptr)
+                insert(frente,fondo,aux->der,altura+1);
+        }
+    }
+}
+
 void BarridoRID_Rec(nodeArbol* arbol){  // Barrido Preorden Recursivo
     if (arbol != nullptr){
         cout << arbol->dato << " ";
@@ -155,8 +184,8 @@ int main(int argc, const char** argv) {
     BarridoRID(arbol);
     cout << endl;
     BarridoIDR_Rec(arbol);
-    cout << "\nBarrido por niveles: ";
-    BarridoPorNiveles(arbol);
+    cout << "\nBarrido por niveles: " << endl;
+    BPNv2(arbol);
 
     if (BTlook(arbol, 1, auxiliar))
         cout << endl << auxiliar->der->dato;
