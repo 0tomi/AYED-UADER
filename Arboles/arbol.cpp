@@ -9,6 +9,8 @@
 using namespace std;
 
 // ####### Codigo de arboles ########
+
+// ## FUNCIONES PARA INSERTAR NODOS ##
 // Inserta nodos y es capaz de reacomodar el arbol en caso de organizarlo mal (no me gusta como quedo)
 void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){     
     nodeArbol* newnode = new nodeArbol;
@@ -41,6 +43,7 @@ void BTinsert(nodeArbol* &arbol, int data){
         BTinsert(arbol->der, data);
 }
 
+// ## FUNCIONES DE BUSQUEDA ##
 // Busca un dato en el arbol binario y avisa si lo encontro, ademas de devolver el nodo
 bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node){
     if (arbol == nullptr)
@@ -74,6 +77,7 @@ bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node, nodeArbol* &father){
     return false;
 }
 
+//  ### BARRIDOS ITERATIVOS ###
 // Hace un barrido RID y muestra las cosas, pero donde dice procesamiento se pueden implementar mas cosas
 void BarridoRID(nodeArbol* arbol){
     if (arbol == nullptr)
@@ -107,7 +111,8 @@ void BarridoPorNiveles(nodeArbol* arbol){
 
             // Procesamiento
             cout << aux->dato << " ";
-            
+            // Entre estas 2 lineas deberia ir cualquier cosa que quieran procesar
+
             if (aux->izq != nullptr)
                 insert(frente,fondo,aux->izq);
             if (aux->der != nullptr)
@@ -116,35 +121,80 @@ void BarridoPorNiveles(nodeArbol* arbol){
     }
 }
 
-void BPNv2(nodeArbol* arbol){   // Barrido por niveles, pero indicando la el nivel.
+void BPNv2(nodeArbol* arbol){   // Barrido por niveles, pero indicando el nivel.
     if (arbol == nullptr)
         cout << "Arbol vacio";
     else{
-        int altura = 0, alturaActual;
+        int nivel = 0, nivelActual;
         nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
         nodeArbol* aux;
-        insert(frente,fondo,arbol,altura);
+        insert(frente,fondo,arbol,nivel);
         cout << "Nodo rey: ";
         while (!ColaVacia(frente)){
-            aux = get(frente,fondo, alturaActual);
+            aux = get(frente,fondo, nivelActual);
 
             // Procesamiento
-            if (altura != alturaActual)
-                cout << "\nNivel " << altura+1 << ": ";
+            if (nivel != nivelActual)
+                cout << "\nNivel " << nivel+1 << ": ";
             cout << aux->dato << " ";
 
-            // Obtener actura actual
-            if (altura < alturaActual)
-                altura = alturaActual;
+            // Obtener altura actual
+            if (nivel < nivelActual)
+                nivel = nivelActual;
             
             if (aux->izq != nullptr)
-                insert(frente,fondo,aux->izq,altura+1);
+                insert(frente,fondo,aux->izq,nivel+1);
             if (aux->der != nullptr)
-                insert(frente,fondo,aux->der,altura+1);
+                insert(frente,fondo,aux->der,nivel+1);
         }
     }
 }
 
+void BarridoPorAlturas(nodeArbol* arbol){   // Barrido por ALTURAS.
+    if (arbol == nullptr)
+        cout << "Arbol vacio";
+    else{
+        int altura = 0, alturaActual;
+        // Cola para organizar los nodos por niveles
+        nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
+
+        // Pila donde guardaremos los nodos
+        nodoPila* pila = nullptr;
+
+        insert(frente,fondo,arbol,altura);
+        while (!ColaVacia(frente)){
+            arbol = get(frente,fondo, alturaActual);
+
+            // Guardamos por niveles los datos en la pila
+            push(pila,arbol,alturaActual);
+
+            // Obtener altura actual
+            if (altura < alturaActual)
+                altura = alturaActual;
+            
+            if (arbol->der != nullptr)
+                insert(frente,fondo,arbol->der,altura+1);
+            if (arbol->izq != nullptr)
+                insert(frente,fondo,arbol->izq,altura+1);
+        }
+
+        // Con la pila cargada, con los nodos ordenados, procedemos a mostrar los nodos por altura.
+        int i = 1;
+        arbol = pop(pila,altura);
+        cout << "\nAltura 0: ";
+        cout << arbol->dato << " ";
+        while(!isEmpty(pila)){
+            arbol = pop(pila,alturaActual);
+            if (alturaActual != altura){
+                altura = alturaActual;
+                cout << "\nAltura " << i++ << ": "; 
+            }
+            cout << arbol->dato << " ";
+        }
+    }
+}
+
+//   ## BARRIDOS RECURSIVOS ##
 void BarridoRID_Rec(nodeArbol* arbol){  // Barrido Preorden Recursivo
     if (arbol != nullptr){
         cout << arbol->dato << " ";
@@ -181,11 +231,14 @@ int main(int argc, const char** argv) {
     BTinsert_V2(arbol, 2);
     nodeArbol* auxiliar; 
 
+    cout << "\n## Barrido RID  ## " << endl;
     BarridoRID(arbol);
-    cout << endl;
+    cout << "\n## Barrido IDR  ## " << endl;
     BarridoIDR_Rec(arbol);
-    cout << "\nBarrido por niveles: " << endl;
+    cout << "\n\n## Barrido por niveles  ## " << endl;
     BPNv2(arbol);
+    cout << "\n\n## Barrido por alturas ##  ";
+    BarridoPorAlturas(arbol);
 
     if (BTlook(arbol, 1, auxiliar))
         cout << endl << auxiliar->der->dato;
