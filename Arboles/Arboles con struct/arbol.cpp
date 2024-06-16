@@ -32,12 +32,11 @@ void BTinsert_V2(nodeArbol* &arbol, int nuevoDato){
 
 // Inserta nodos en el arbol
 void BTinsert(nodeArbol* &arbol, int data){
-    nodeArbol* node = new nodeArbol;
-    node->dato = data;
-    if (arbol == nullptr)
+    if (arbol == nullptr){
+        nodeArbol* node = new nodeArbol;
+        node->dato = data;
         arbol = node;
-        
-    else if (data < arbol->dato)
+    } else if (data < arbol->dato)
         BTinsert(arbol->izq, data);
     else if (data > arbol->dato)
         BTinsert(arbol->der, data);
@@ -179,7 +178,7 @@ void BarridoPorAlturas(nodeArbol* arbol){   // Barrido por ALTURAS.
         }
 
         // Con la pila cargada, con los nodos ordenados, procedemos a mostrar los nodos por altura.
-        int i = 1;
+        int ValorCentinela = 1;
         arbol = pop(pila,altura);
         cout << "\nAltura 0: ";
         cout << arbol->dato << " ";
@@ -187,7 +186,7 @@ void BarridoPorAlturas(nodeArbol* arbol){   // Barrido por ALTURAS.
             arbol = pop(pila,alturaActual);
             if (alturaActual != altura){
                 altura = alturaActual;
-                cout << "\nAltura " << i++ << ": "; 
+                cout << "\nAltura " << ValorCentinela++ << ": "; 
             }
             cout << arbol->dato << " ";
         }
