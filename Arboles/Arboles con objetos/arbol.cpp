@@ -1,6 +1,7 @@
-#include "nodos.cpp"
 #include "cola.cpp"
 #include "pila.cpp"
+#include <iostream>
+using namespace std;
 
 class Arbol{
     public:
@@ -18,9 +19,8 @@ class Arbol{
         void BPNv2();
         void BarridoPorAlturas();
 
-        void BarridoRID_Rec();
-        void BarridoIRD_Rec();
-        void BarridoIDR_Rec();
+        bool remove(int data);
+        bool remove(nodeArbol* data);
 
        // ~Arbol();
     private:
@@ -126,10 +126,50 @@ bool Arbol::look(int data, nodeArbol* &nodo, nodeArbol* &padre){
     return false;
 }
 
-Arbol::
+void Arbol::BarridoRID(){
+    nodeArbol* arbol = this->root;
+    if (arbol == nullptr)
+        cout << "Arbol vacio";
+    else{
+        Pila pila; nodeArbol* aux;
+        pila.insert(arbol);
+        while (!pila.isEmpty()){
+            aux = pila.pop();
 
-Arbol::
+            // Procesamiento
+            cout << aux->dato << " ";
+            
+            if (aux->der != nullptr)
+                pila.insert(aux->der);
+            if (aux->izq != nullptr)
+                pila.insert(aux->izq);
+        }
+    }
+}
 
-Arbol::
 
-Arbol::
+void Arbol::BarridoPorNiveles(){
+    nodeArbol* arbol = root;
+    if (arbol == nullptr)
+        cout << "Arbol vacio";
+    else{
+        cola Cola; nodeArbol* aux;
+        Cola.add(arbol);
+        while (!Cola.isEmpty()){
+            aux = Cola.get();
+
+            // Procesamiento
+            cout << aux->dato << " ";
+            // Entre estas 2 lineas deberia ir cualquier cosa que quieran procesar
+
+            if (aux->izq != nullptr)
+                Cola.add(aux->izq);
+            if (aux->der != nullptr)
+                Cola.add(aux->der);
+        }
+    }
+} 
+
+void Arbol::BPNv2()
+
+void Arbol::BarridoPorAlturas()

@@ -5,9 +5,12 @@ class Pila
 public:
     Pila();
     Pila(nodeArbol* data);
+
     int getSize();
     nodeArbol* pop();
     bool insert(nodeArbol* data);
+    bool isEmpty();
+
     ~Pila();
 private:
     nodoPila* pila;
@@ -51,7 +54,7 @@ nodeArbol* Pila::pop()
     else{
         nodeArbol* aux = this->pila->dato;
         nodoPila* aux2 = this->pila;
-        
+
         this->pila = aux2->link;
         this->size--;
 
@@ -69,6 +72,12 @@ bool Pila::insert(nodeArbol* data)
     pila = aux;
     this->size++;
     return true;
+}
+
+bool Pila::isEmpty(){
+    if (pila == nullptr)
+        return true;
+    return false;
 }
 
 Pila::~Pila()

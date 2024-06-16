@@ -6,6 +6,7 @@ public:
     cola();
     cola(nodeArbol* data);
     int size();
+    bool isEmpty();
 
     void add(nodeArbol* data);
     void add(nodeArbol* data, int altura);
@@ -39,6 +40,12 @@ int cola::size()
     return this->length;
 }
 
+bool cola::isEmpty(){
+    if (frente == nullptr)
+        return true;
+    return false;
+}
+
 void cola::add(nodeArbol* data)
 {
     nodoCola* aux = new nodoCola(data);
@@ -54,7 +61,7 @@ void cola::add(nodeArbol* data)
     }
 }
 
-void add(nodeArbol* data, int altura){
+void cola::add(nodeArbol* data, int altura){
     nodoCola* aux = new nodoCola(data,altura);
 
     if (this->frente == nullptr){

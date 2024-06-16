@@ -4,8 +4,10 @@ using namespace std;
 
 int main(int argc, char const *argv[])
 {
-    int *puntero = nullptr;
-
-    cout << *puntero;
+    Arbol test;
+    test.insert(10);
+    test.insert(5);
+    test.insert(12);
+    test.BarridoRID();
     return 0;
 }
