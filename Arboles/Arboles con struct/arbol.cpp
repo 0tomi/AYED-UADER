@@ -326,7 +326,48 @@ void test(){
         cout << endl << auxiliar->der->dato;
 }
 
-int main(int argc, const char** argv) {
+void test2(){
+    nodeArbol* arbol = nullptr;
+    BTinsert(arbol, 10);
+    BTinsert(arbol, 15);
+    BTinsert(arbol,5);
+    BTinsert(arbol,7);
+    BTinsert(arbol,6);
+    BTinsert(arbol,8);
+    BTinsert(arbol, 3);
+    BTinsert(arbol, 2);
+    BTinsert(arbol, 4);
+    BTinsert(arbol, 13);
+    BTinsert(arbol, 18);
 
+    // Arbol normal
+    BPNv2(arbol);
+
+    cout << endl << endl;
+    eliminarNodo(arbol, 5);
+    BPNv2(arbol);
+}
+
+void test3(){
+    nodeArbol* arbol = nullptr;
+    BTinsert(arbol, 10);
+    BTinsert(arbol, 15);
+    BTinsert(arbol,5);
+    BTinsert(arbol, 3);
+    BTinsert(arbol, 2);
+    BTinsert(arbol, 4);
+    BTinsert(arbol, 13);
+    BTinsert(arbol, 18);
+
+    // Arbol normal
+    BPNv2(arbol);
+
+    cout << endl << endl;
+    eliminarNodo(arbol, 5);
+    BPNv2(arbol);
+}
+
+int main(int argc, const char** argv) {
+    test3();
     return 0;
 }
