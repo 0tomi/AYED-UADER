@@ -84,7 +84,7 @@ void BarridoRID(nodeArbol* arbol){
     else{
         nodoPila* pila = nullptr; nodeArbol* aux;
         push(pila,arbol);
-        while (!(isEmpty(pila))){
+        while (!isEmpty(pila)){
             aux = pop(pila);
 
             // Procesamiento
@@ -415,7 +415,7 @@ void test3(){
     BTinsert(arbol, 18);
 
     // Arbol normal
-    BPNv2(arbol);
+    BarridoRID_Rec(arbol);
 
     cout << endl << "\nArbol despues de eliminar el numero 5:\n";
     eliminarNodo(arbol, 5);
@@ -430,6 +430,6 @@ void test3(){
 }
 
 int main(int argc, const char** argv) {
-    test3();
+    test();
     return 0;
 }
