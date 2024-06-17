@@ -336,6 +336,15 @@ void mostrarNodosHoja(nodeArbol* arbol){
     }
 }
 
+int contarHojasRecursivo(nodeArbol* arbol){
+    if (arbol == nullptr)
+        return 0;
+    if (arbol->izq == nullptr && arbol->der == nullptr)
+        return 1;
+
+    return 0 + contarNodosHoja(arbol->izq) + contarNodosHoja(arbol->der);
+}
+
 void mostrarNodosHojaRecursivo(nodeArbol* arbol){
     if (arbol != nullptr){
         if (arbol->izq == nullptr && arbol->der == nullptr)
@@ -416,6 +425,9 @@ void test3(){
     mostrarNodosHoja(arbol);
     cout << "\nNodos hoja recursivo: ";
     mostrarNodosHojaRecursivo(arbol);
+
+    cout << "\nCantidad de nodos hoja: ";
+    contarHojasRecursivo(arbol);
 }
 
 int main(int argc, const char** argv) {
