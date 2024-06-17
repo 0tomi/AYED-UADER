@@ -263,7 +263,7 @@ bool eliminarNodo(nodeArbol* &arbol,int dato){
             delete nodo2delete;
             return true;
         }
-        // Caso 3: Eliminar nodo intermedio sin hijo derecho
+        // Caso 2: Eliminar nodo intermedio sin hijo derecho
         if (nodo2delete->der == nullptr){
             if (padre == nullptr){
                 arbol = nodo2delete->izq;
@@ -342,7 +342,7 @@ int contarHojasRecursivo(nodeArbol* arbol){
     if (arbol->izq == nullptr && arbol->der == nullptr)
         return 1;
 
-    return 0 + contarNodosHoja(arbol->izq) + contarNodosHoja(arbol->der);
+    return contarNodosHoja(arbol->izq) + contarNodosHoja(arbol->der);
 }
 
 void mostrarNodosHojaRecursivo(nodeArbol* arbol){
@@ -426,8 +426,7 @@ void test3(){
     cout << "\nNodos hoja recursivo: ";
     mostrarNodosHojaRecursivo(arbol);
 
-    cout << "\nCantidad de nodos hoja: ";
-    contarHojasRecursivo(arbol);
+    cout << "\nCantidad de nodos hoja: "<< contarNodosHoja(arbol);
 }
 
 int main(int argc, const char** argv) {
