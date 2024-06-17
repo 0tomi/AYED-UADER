@@ -13,9 +13,7 @@ struct nodoPila{
 };
 
 bool isEmpty(nodoPila* pila){
-    if (pila == nullptr)
-        return true;
-    return false;
+    return (pila == nullptr);
 }
 
 void push(nodoPila* &pila, nodeArbol* dato){
@@ -76,9 +74,7 @@ struct nodoCola{
 };
 
 bool ColaVacia(nodoCola* frente){
-    if (frente == nullptr)
-        return true;
-    return false;
+    return (frente == nullptr);
 }
 
 void insert(nodoCola* &frente, nodoCola* &fondo, nodeArbol* nodo){

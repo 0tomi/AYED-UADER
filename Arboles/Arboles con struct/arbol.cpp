@@ -218,7 +218,90 @@ void BarridoIDR_Rec(nodeArbol* arbol){  // Barrido PostOrden Recursivo
     }
 }
 
-int main(int argc, const char** argv) {
+// ## ELIMINAR UN NODO ##
+void insertarRecursivo(nodeArbol* &arbol, nodeArbol* nodo){
+    if (arbol == nullptr){
+        arbol = nodo;
+    } else if (nodo->dato < arbol->dato)
+        insertarRecursivo(arbol->izq, nodo);
+    else if (nodo->dato > arbol->dato)
+        insertarRecursivo(arbol->der, nodo);
+}
+
+void BarridoDeNodos(nodeArbol* arbol, nodoCola* &frente, nodoCola* &fondo){
+    nodoPila* pila = nullptr;
+    push(pila, arbol);
+    while(!isEmpty(pila)){
+        arbol = pop(pila);
+
+        // Insertamos los nodos que traiga en la cola.
+        insert(frente,fondo,arbol); 
+
+        if (arbol->der != nullptr)
+            push(pila, arbol->der);
+        if (arbol->izq != nullptr)
+            push(pila, arbol->izq);
+
+        // Eliminamos los punteros, porque estos nodos cambiaran de posicion.
+        arbol->izq = arbol->der = nullptr;
+    }       
+}
+
+bool eliminarNodo(nodeArbol* &arbol,int dato){
+    // Tenemos 4 casos, graficados aca: https://prnt.sc/RhbabCLpXbCY
+    nodeArbol* padre; nodeArbol* nodo2delete;
+    if (BTlook(arbol, dato, nodo2delete, padre)){
+        // Caso 0: Eliminar el nodo raiz o rey
+        // Caso 1: Eliminar nodo hoja
+        if (nodo2delete->izq == nullptr && nodo2delete->der == nullptr){
+            if (padre != nullptr){
+                if (padre->izq == nodo2delete)
+                    padre->izq = nullptr;
+                else padre->der = nullptr;
+            } 
+            else arbol = nullptr;
+            delete nodo2delete;
+            return true;
+        }
+        // Caso 3: Eliminar nodo intermedio sin hijo derecho
+        if (nodo2delete->der == nullptr){
+            if (padre == nullptr){
+                arbol = nodo2delete->izq;
+                delete nodo2delete;
+            } else 
+                padre->izq = nodo2delete->izq; 
+        } else {
+            // Caso 3: Eliminar nodo intermedio con hijo derecho 
+            nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
+            BarridoDeNodos(nodo2delete->der, frente, fondo);
+
+            nodeArbol* aux = get(frente,fondo);
+            aux->izq = aux->der = nullptr;
+            if (padre == nullptr){
+                //Caso 3b o 4: Reemplazar raiz
+                aux->izq = arbol->izq;
+                delete arbol; 
+                arbol = aux;
+                while(!ColaVacia(frente))
+                    insertarRecursivo(aux, get(frente,fondo));
+            } else {
+                if (padre->izq == nodo2delete)
+                    padre->izq = aux;
+                else padre->der = aux; 
+                aux->izq = nodo2delete->izq;
+                delete nodo2delete;
+                while(!ColaVacia(frente))
+                    insertarRecursivo(aux, get(frente,fondo));
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+// ## FUNCIONES PARA TESTEAR ##
+
+void test(){
     nodeArbol* arbol = nullptr;
     BTinsert(arbol, 7);
     
@@ -241,5 +324,9 @@ int main(int argc, const char** argv) {
 
     if (BTlook(arbol, 1, auxiliar))
         cout << endl << auxiliar->der->dato;
+}
+
+int main(int argc, const char** argv) {
+
     return 0;
 }
