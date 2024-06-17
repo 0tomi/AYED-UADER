@@ -299,6 +299,52 @@ bool eliminarNodo(nodeArbol* &arbol,int dato){
     return false;
 }
 
+// ## CONTAR NODOS HOJA ##
+int contarNodosHoja(nodeArbol* arbol){
+    int hojas = 0;
+    if (arbol != nullptr){
+        nodoPila* pila = nullptr;
+        push(pila,arbol);
+        while(!isEmpty(pila)){
+            arbol = pop(pila);
+            if (arbol->izq == nullptr && arbol->der == nullptr)
+                hojas++;
+            
+            if (arbol->izq != nullptr)
+                push(pila,arbol->izq);
+            if (arbol->der != nullptr)
+                push(pila,arbol->der);
+        }
+    }
+    return hojas;
+}
+
+void mostrarNodosHoja(nodeArbol* arbol){
+    if (arbol != nullptr){
+        nodoPila* pila = nullptr;
+        push(pila,arbol);
+        while(!isEmpty(pila)){
+            arbol = pop(pila);
+            if (arbol->izq == nullptr && arbol->der == nullptr)
+                cout << arbol->dato << " ";
+            
+            if (arbol->der != nullptr)
+                push(pila,arbol->der);
+            if (arbol->izq != nullptr)
+                push(pila,arbol->izq);
+        }
+    }
+}
+
+void mostrarNodosHojaRecursivo(nodeArbol* arbol){
+    if (arbol != nullptr){
+        if (arbol->izq == nullptr && arbol->der == nullptr)
+            cout << arbol->dato << " ";
+        mostrarNodosHojaRecursivo(arbol->izq);
+        mostrarNodosHojaRecursivo(arbol->der);
+    }
+}
+
 // ## FUNCIONES PARA TESTEAR ##
 
 void test(){
@@ -365,6 +411,11 @@ void test3(){
     cout << endl << "\nArbol despues de eliminar el numero 5:\n";
     eliminarNodo(arbol, 5);
     BPNv2(arbol);
+
+    cout << endl << "\nNodos hoja: ";
+    mostrarNodosHoja(arbol);
+    cout << "\nNodos hoja recursivo: ";
+    mostrarNodosHojaRecursivo(arbol);
 }
 
 int main(int argc, const char** argv) {
