@@ -45,18 +45,18 @@ void BTinsert(nodeArbol* &arbol, int data){
 // ## FUNCIONES DE BUSQUEDA ##
 // Busca un dato en el arbol binario y avisa si lo encontro, ademas de devolver el nodo
 bool BTlook(nodeArbol* arbol, int data, nodeArbol* &node){
-    if (arbol == nullptr)
-        return false;
-    else {
-        if (data == arbol->dato){
-            node = arbol;
-            return true;
-        }    
-        if (data < arbol->dato)
-            BTlook(arbol->izq, data, node);
-        else 
-            BTlook(arbol->der, data, node);
+   if (arbol != nullptr){  
+        node = arbol;  
+        while (node != nullptr){
+            if (node->dato == data)
+                return true;
+
+            if (data < node->dato)
+                node = node->izq;
+            else node = node->der;
+        }
     }
+    return false;
 }
 
 // Lo mismo que la anterior pero sin recursividad, y ademas devuelve el nodo y su padre
@@ -362,7 +362,7 @@ void test3(){
     // Arbol normal
     BPNv2(arbol);
 
-    cout << endl << endl;
+    cout << endl << "\nArbol despues de eliminar el numero 5:\n";
     eliminarNodo(arbol, 5);
     BPNv2(arbol);
 }
