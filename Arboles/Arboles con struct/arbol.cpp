@@ -299,6 +299,62 @@ bool eliminarNodo(nodeArbol* &arbol,int dato){
     return false;
 }
 
+// ## ELIMINAR NODOS V2 ##
+// Inspirado en un video q me vi de programacionATS..
+void AcomodarNodo(nodeArbol* padre, nodeArbol* comparacion, nodeArbol* resultado){
+    if (padre->izq == comparacion) 
+        padre->izq = resultado;
+    else padre->der = resultado;
+}
+
+nodeArbol* EncontrarMenorHijoIZQ(nodeArbol* &arbol){
+    if (arbol->izq == nullptr){
+        nodeArbol* aux = arbol;
+        arbol = arbol->der;
+        return aux;
+    }
+    return EncontrarMenorHijoIZQ(arbol->izq);
+}
+
+nodeArbol* AcomodarArbol(nodeArbol* node2delete){
+    nodeArbol* aux = node2delete->der;
+    // Caso 3: No tiene subarbol derecho
+    if (aux == nullptr)
+        return node2delete->izq;
+
+    // Caso 4: Si tiene subarbol derecho
+    if (aux->izq != nullptr)
+        aux = EncontrarMenorHijoIZQ(aux);
+
+    aux->izq = node2delete->izq;
+    if (aux != node2delete->der)
+        aux->der = node2delete->der;
+
+    return aux;
+}
+
+bool eliminar2(nodeArbol* &arbol, int dato){
+    nodeArbol* padre; nodeArbol* node2delete; nodeArbol* arbolAcomodado;
+    if (BTlook(arbol, dato, node2delete, padre)){
+        // Caso 1: Nodo a eliminar es hoja
+        if (node2delete->izq==nullptr && node2delete->der==nullptr)
+            arbolAcomodado = nullptr;
+        else
+        // Caso 2: Nodo a eliminar es interno (No es hoja)
+            arbolAcomodado = AcomodarArbol(node2delete);
+
+        // Tomamos la decision de si el nodo a eliminar es raiz o no.
+        if (padre != nullptr)
+            AcomodarNodo(padre, node2delete, arbolAcomodado);
+        else 
+            arbol = arbolAcomodado;
+        
+        delete node2delete;
+        return true;
+    }
+    return false;
+}
+        
 // ## CONTAR NODOS HOJA ##
 int contarNodosHoja(nodeArbol* arbol){
     int hojas = 0;
@@ -429,7 +485,49 @@ void test3(){
     cout << "\nCantidad de nodos hoja: "<< contarNodosHoja(arbol);
 }
 
+// Test de la funcion eliminar v2
+void test4(){
+    nodeArbol* arbol = nullptr;
+    BTinsert(arbol, 10);
+    BTinsert(arbol, 3);
+    BTinsert(arbol, 15);
+    BTinsert(arbol, 2);
+    BTinsert(arbol, 4);
+    BTinsert(arbol, 13);
+    BTinsert(arbol, 18);
+
+    cout << "Arbol original: \n";
+    BPNv2(arbol);
+
+    cout << "\n\nArbol con la raiz quitada: \n";
+    eliminar2(arbol,10);
+    BPNv2(arbol);
+
+}
+
+void test5(){
+    nodeArbol* arbol = nullptr;
+    BTinsert(arbol, 10);
+    BTinsert(arbol, 15);
+    BTinsert(arbol,5);
+    BTinsert(arbol,7);
+    BTinsert(arbol,6);
+    BTinsert(arbol,8);
+    BTinsert(arbol, 3);
+    BTinsert(arbol, 2);
+    BTinsert(arbol, 4);
+    BTinsert(arbol, 13);
+    BTinsert(arbol, 18);
+
+    // Arbol normal
+    BPNv2(arbol);
+
+    cout << endl << endl << "Arbol sin el nodo 5: \n";
+    eliminar2(arbol, 5);
+    BPNv2(arbol);
+}
+
 int main(int argc, const char** argv) {
-    test();
+    test4();
     return 0;
 }
