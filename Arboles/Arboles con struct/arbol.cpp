@@ -128,7 +128,7 @@ void BPNv2(nodeArbol* arbol){   // Barrido por niveles, pero indicando el nivel.
         nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
         nodeArbol* aux;
         insert(frente,fondo,arbol,nivel);
-        cout << "Nodo rey: ";
+        cout << "Nodo raiz: ";
         while (!ColaVacia(frente)){
             aux = get(frente,fondo, nivelActual);
 
@@ -528,6 +528,16 @@ void test5(){
 }
 
 int main(int argc, const char** argv) {
-    test4();
+    nodeArbol* arbol = nullptr;
+    BTinsert(arbol,24);
+    BTinsert(arbol,30);
+    BTinsert(arbol,54);
+    BTinsert(arbol,12);
+    BTinsert(arbol,6);
+    BTinsert(arbol,18);
+    BTinsert(arbol,21);
+    BTinsert(arbol,48);
+    BTinsert(arbol,15);
+    BarridoIDR_Rec(arbol);
     return 0;
 }
