@@ -218,7 +218,8 @@ void BarridoIDR_Rec(nodeArbol* arbol){  // Barrido PostOrden Recursivo
     }
 }
 
-// ## ELIMINAR UN NODO ##
+// ## Insertar un nodo de forma recursiva en un arbol (EL NODO, NO EL DATO) ##
+
 void insertarRecursivo(nodeArbol* &arbol, nodeArbol* nodo){
     if (arbol == nullptr){
         arbol = nodo;
@@ -228,79 +229,8 @@ void insertarRecursivo(nodeArbol* &arbol, nodeArbol* nodo){
         insertarRecursivo(arbol->der, nodo);
 }
 
-void BarridoDeNodos(nodeArbol* arbol, nodoCola* &frente, nodoCola* &fondo){
-    nodoPila* pila = nullptr;
-    push(pila, arbol);
-    while(!isEmpty(pila)){
-        arbol = pop(pila);
+// ## ELIMINAR UN NODO ##
 
-        // Insertamos los nodos que traiga en la cola.
-        insert(frente,fondo,arbol); 
-
-        if (arbol->der != nullptr)
-            push(pila, arbol->der);
-        if (arbol->izq != nullptr)
-            push(pila, arbol->izq);
-
-        // Eliminamos los punteros, porque estos nodos cambiaran de posicion.
-        arbol->izq = arbol->der = nullptr;
-    }       
-}
-
-bool eliminarNodo(nodeArbol* &arbol,int dato){
-    // Tenemos 4 casos, graficados aca: https://prnt.sc/RhbabCLpXbCY
-    nodeArbol* padre; nodeArbol* nodo2delete;
-    if (BTlook(arbol, dato, nodo2delete, padre)){
-        // Caso 0: Eliminar el nodo raiz o rey
-        // Caso 1: Eliminar nodo hoja
-        if (nodo2delete->izq == nullptr && nodo2delete->der == nullptr){
-            if (padre != nullptr){
-                if (padre->izq == nodo2delete)
-                    padre->izq = nullptr;
-                else padre->der = nullptr;
-            } 
-            else arbol = nullptr;
-            delete nodo2delete;
-            return true;
-        }
-        // Caso 2: Eliminar nodo intermedio sin hijo derecho
-        if (nodo2delete->der == nullptr){
-            if (padre == nullptr){
-                arbol = nodo2delete->izq;
-                delete nodo2delete;
-            } else 
-                padre->izq = nodo2delete->izq; 
-        } else {
-            // Caso 3: Eliminar nodo intermedio con hijo derecho 
-            nodoCola* frente = nullptr; nodoCola* fondo = nullptr;
-            BarridoDeNodos(nodo2delete->der, frente, fondo);
-
-            nodeArbol* aux = get(frente,fondo);
-            aux->izq = aux->der = nullptr;
-            if (padre == nullptr){
-                //Caso 3b o 4: Reemplazar raiz
-                aux->izq = arbol->izq;
-                delete arbol; 
-                arbol = aux;
-                while(!ColaVacia(frente))
-                    insertarRecursivo(aux, get(frente,fondo));
-            } else {
-                if (padre->izq == nodo2delete)
-                    padre->izq = aux;
-                else padre->der = aux; 
-                aux->izq = nodo2delete->izq;
-                delete nodo2delete;
-                while(!ColaVacia(frente))
-                    insertarRecursivo(aux, get(frente,fondo));
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-// ## ELIMINAR NODOS V2 ##
-// Inspirado en un video q me vi de programacionATS..
 void AcomodarNodo(nodeArbol* padre, nodeArbol* comparacion, nodeArbol* resultado){
     if (padre->izq == comparacion) 
         padre->izq = resultado;
@@ -333,7 +263,7 @@ nodeArbol* AcomodarArbol(nodeArbol* node2delete){
     return aux;
 }
 
-bool eliminar2(nodeArbol* &arbol, int dato){
+bool eliminar(nodeArbol* &arbol, int dato){
     nodeArbol* padre; nodeArbol* node2delete; nodeArbol* arbolAcomodado;
     if (BTlook(arbol, dato, node2delete, padre)){
         // Caso 1: Nodo a eliminar es hoja
@@ -478,7 +408,7 @@ void test2(){
     BPNv2(arbol);
 
     cout << endl << endl;
-    eliminarNodo(arbol, 5);
+    eliminar(arbol, 5);
     BPNv2(arbol);
 }
 
@@ -497,7 +427,7 @@ void test3(){
     BarridoRID_Rec(arbol);
 
     cout << endl << "\nArbol despues de eliminar el numero 5:\n";
-    eliminarNodo(arbol, 5);
+    eliminar(arbol, 5);
     BPNv2(arbol);
 
     cout << endl << "\nNodos hoja: ";
@@ -523,7 +453,7 @@ void test4(){
     BPNv2(arbol);
 
     cout << "\n\nArbol con la raiz quitada: \n";
-    eliminar2(arbol,10);
+    eliminar(arbol,10);
     BPNv2(arbol);
 
 }
@@ -546,7 +476,7 @@ void test5(){
     BPNv2(arbol);
 
     cout << endl << endl << "Arbol sin el nodo 5: \n";
-    eliminar2(arbol, 5);
+    eliminar(arbol, 5);
     BPNv2(arbol);
 }
 
@@ -565,6 +495,6 @@ void test6(){
 }
 
 int main(int argc, const char** argv) {
-
+    test5();
     return 0;
 }
