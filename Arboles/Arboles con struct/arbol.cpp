@@ -410,6 +410,29 @@ void mostrarNodosHojaRecursivo(nodeArbol* arbol){
     }
 }
 
+// # ORDENAR ARBOL QUE NO ES DE BUSQUEDA (DESORDENADO) ##
+void ordenarArbol(nodeArbol* &arbol){
+    nodeArbol* nuevoArbol = nullptr;
+    if (arbol != nullptr){
+        nodoPila* pila = nullptr;
+        nodeArbol* nodo;
+        push(pila,arbol);
+        while (!isEmpty(pila)){
+            nodo = pop(pila);
+            
+            insertarRecursivo(nuevoArbol, nodo);
+            
+            if (nodo->der != nullptr)
+                push(pila,nodo->der);
+            if (nodo->izq != nullptr)
+                push(pila,nodo->izq);
+
+            nodo->izq = nodo->der = nullptr;
+        }
+    }
+    arbol = nuevoArbol;
+}
+
 // ## FUNCIONES PARA TESTEAR ##
 
 void test(){
@@ -527,7 +550,7 @@ void test5(){
     BPNv2(arbol);
 }
 
-int main(int argc, const char** argv) {
+void test6(){
     nodeArbol* arbol = nullptr;
     BTinsert(arbol,24);
     BTinsert(arbol,30);
@@ -539,5 +562,9 @@ int main(int argc, const char** argv) {
     BTinsert(arbol,48);
     BTinsert(arbol,15);
     BarridoIDR_Rec(arbol);
+}
+
+int main(int argc, const char** argv) {
+
     return 0;
 }
