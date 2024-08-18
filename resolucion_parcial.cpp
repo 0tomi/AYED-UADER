@@ -21,6 +21,10 @@ struct nodoPila{
     nene* info;    
 };
 
+void getEmpty(){
+    return;
+}
+
 void pilaInsertar(nodoPila* &pila, nene* nuevoDato);
 
 void removerNodo(nodoLDE* &lista){
@@ -59,6 +63,7 @@ void funcionEj1(nodoLDE* &lista, nodoPila* &SalitaVerde, nodoPila* &SalitaNegra)
     nodoLDE* aux = lista; nodoLDE* aux2;
     while (aux != NULL){
         aux2 = aux->sig;
+        
         if (puedeSalitaVerde(aux->info))
             InsertarNeneEnSala(lista,aux,SalitaVerde);
         else if (puedeSalitaNegra(aux->info))
