@@ -32,7 +32,7 @@ void ArbolAVL::insert(int dato)
     }
     subArbol = new nodo{dato, altura, padre};
 
-    //this->insertRecursivo(root, dato, 1, insertado);
+    balancear(subArbol);
     
 
     
@@ -49,6 +49,11 @@ int ArbolAVL::alturaNodo(nodo * subArbol)
             return 1 + aDer; 
     } else 
     return 0;
+}
+
+int ArbolAVL::factorEquilibrio(nodo * subArbol)
+{
+    return alturaNodo(subArbol->der) - alturaNodo(subArbol->izq);
 }
 
 
