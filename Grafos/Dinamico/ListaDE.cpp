@@ -8,7 +8,7 @@ struct par {
 template <class Data>
 class ListaDE{
 private:
-    struct Node {
+    struct Node{
         Data dato;
         Node * next;
         Node * back;
@@ -16,8 +16,15 @@ private:
     Node * first;
     Node * last;
     int size;
-    void del(Node * &nodo, Node * &nodo2mover);
-    par<Node*> look(Data);
+    Node* look(Data dato) {
+        Node* aux = first;
+        while (aux != nullptr){
+            if (aux->dato == dato)
+                return aux;
+            aux = aux->next;
+        }
+        return nullptr;
+    }
 public:
     ListaDE(Data element) {first = last = nullptr; size = 0; addAtFirst(element);}
     ListaDE() {first = last = nullptr; size = 0;}
@@ -27,19 +34,6 @@ public:
     Data& operator[](unsigned int n);
     par<Data> lookFor(Data);
 };
-
-template<class Data>
-par<Node*> ListaDE::look (Data dato){
-    Node* aux = nodo
-}
-
-template<class Data>
-void ListaDE<Data>::del(Node * &nodo, Node * &nodo2mover)
-{
-    Node * aux = nodo;
-    nodo = nodo2mover;
-    delete aux;
-}
 
 template<class Data>
 void ListaDE<Data>::addAtFirst(Data data)
@@ -70,8 +64,8 @@ void ListaDE<Data>::addAtFinal(Data data)
 template<class Data>
 bool ListaDE<Data>::kill(Data dat)
 {
-    par<Data> dato = this->lookFor(dat);
-    if (!dato.finded)
+    Node* dato = this->look(dat);
+    if (!dato)
         return false;
     
     this->size--;
@@ -82,27 +76,35 @@ bool ListaDE<Data>::kill(Data dat)
         return true;
     }
 
-    if (first->dato == dato.data){
-        this->del(first, first->next);
-        return true;
-    }
-        
-    if (last->dato == dato.data){
-        this->del(last, last->back);
-        return true;
-    }
+    if (first != dato)
+        dato->back->next = dato->next;
+    else first = dato->next;
 
-    del()
+    if (last != dato)
+        dato->next->back = dato->back;
+    else last = dato->back;
+
+    delete dato;
 }
 
 template<class Data>
 par<Data> ListaDE<Data>::lookFor(Data dato)
 {
-    
+    Node* nodo = look(dato);
+    if (nodo)
+        return {true, nodo->dato};
+    else return {false};
 }
 
 template<class Data>
 Data& ListaDE<Data>::operator[](unsigned int n)
 {
-    
+    Node* aux = first;
+    while (n) {
+        if (aux->next)
+            aux = aux->next;
+        n--;
+    }
+
+    return aux->dato;
 }
