@@ -1,4 +1,6 @@
 // Voy a meter todo en el CPP porque es mas comodo al no estar usando QT
+#ifndef LISTADE_CPP
+#define LISTADE_CPP
 template <class T>
 struct par {
     bool finded; 
@@ -26,17 +28,20 @@ private:
         return nullptr;
     }
 public:
-    ListaDE(Data element) {first = last = nullptr; size = 0; addAtFirst(element);}
+    ListaDE(Data element) {first = last = nullptr; size = 0; push_front(element);}
     ListaDE() {first = last = nullptr; size = 0;}
-    void addAtFirst(Data);
-    void addAtFinal(Data);
+    ~ListaDE();
+    void clear();
+    void push_back(Data);
+    void push_front(Data);
+    int getSize() { return size; }
     bool kill(Data);
     Data& operator[](unsigned int n);
     par<Data> lookFor(Data);
 };
 
 template<class Data>
-void ListaDE<Data>::addAtFirst(Data data)
+void ListaDE<Data>::push_front(Data data)
 {
     size++; 
     if (first == nullptr){
@@ -49,7 +54,7 @@ void ListaDE<Data>::addAtFirst(Data data)
 }
 
 template<class Data>
-void ListaDE<Data>::addAtFinal(Data data)
+void ListaDE<Data>::push_back(Data data)
 {
     size++; 
     if (first == nullptr){
@@ -108,3 +113,22 @@ Data& ListaDE<Data>::operator[](unsigned int n)
 
     return aux->dato;
 }
+
+template <class Data>
+void ListaDE<Data>::clear(){
+    Node* aux = first;
+    while(aux){
+        first = first->next;
+        delete aux;
+        aux = first;
+    }
+    this->size = 0;
+    first = last = nullptr;
+}
+
+template <class Data>
+ListaDE<Data>::~ListaDE(){
+    this->clear();
+}
+
+#endif // !LISTADE_CPP
