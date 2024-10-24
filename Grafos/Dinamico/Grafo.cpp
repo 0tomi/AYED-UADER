@@ -156,6 +156,8 @@ bool Grafo::addNodo(int id){
     return true;
 }
 
+
+
 Grafo::~Grafo()
 {
 }

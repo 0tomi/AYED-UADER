@@ -133,4 +133,28 @@ ListaDE<Data>::~ListaDE(){
     this->clear();
 }
 
+/// ################# Locura iterador ##############
+template <class TomiContenedor, class typeNodo, class Dato>
+class Iterador
+{
+private:
+    Node * nodo;
+public:
+    Iterador(TomiContenedor);
+    void operator++();
+    bool end();
+    Dato& data;
+    ~Iterador();
+};
+
+template <class TomiContenedor, class typeNodo, class Dato>
+Iterador<TomiContenedor, typeNodo, Dato>::Iterador(TomiContenedor cont)
+{
+}
+
+template <class TomiContenedor, class typeNodo, class Dato>
+Iterador<TomiContenedor, typeNodo, Dato>::~Iterador()
+{
+}
+
 #endif // !LISTADE_CPP
