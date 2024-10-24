@@ -31,6 +31,8 @@ public:
     ListaDE(Data element) {first = last = nullptr; size = 0; push_front(element);}
     ListaDE() {first = last = nullptr; size = 0;}
     ~ListaDE();
+    Data& front() { return first->dato; }
+    Data& back() { return last->dato; }
     void clear();
     void push_back(Data);
     void push_front(Data);

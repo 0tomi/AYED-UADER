@@ -42,8 +42,10 @@ public:
     int id() { return this->id_nodo; }
     void addArco(Arco arc);
     int getCantidadArcos();
-    int checkIfRelacionadoCon(int id_Nodo);   // 0: No tiene relaciones, mayor a 0, cantidad de relaciones.
+    // 0: No tiene relaciones, mayor a 0, cantidad de relaciones.
+    int checkIfRelacionadoCon(int id_Nodo);   
     bool checkID_ArcoUsada(int id);
+    // Devuelve el ID de cada nodo que tiene en su right; 0: No tiene right.
     ListaDE<int> getRight();
     ~Nodo();
 };
@@ -83,6 +85,14 @@ bool Nodo::checkID_ArcoUsada(int id)
     return false;
 }
 
+ListaDE<int> Nodo::getRight(){
+    ListaDE<int> NodosRight;
+    auto tam = arcos.getSize();
+    for (int i = 0; i < tam; i++)
+        NodosRight.push_back(arcos[i].id());
+    return NodosRight;
+}
+
 Nodo::~Nodo()
 {
     arcos.clear();
@@ -95,11 +105,55 @@ private:
     ListaDE <Nodo> nodos;
 public:
     Grafo(/* args */);
+    int getCantidadRelaciones();
+    int getCantidadGrafos() { return nodos.getSize(); }
+    Nodo& getNodo(int id_Nodo);
+    bool find(int id_Nodo);
+    bool addNodo(int id_Nodo); // aca se podria pasar por parametro T el dato que guardara el nodo
+    void addArco(int id_Arco, int id_NodoOrigen, int id_NodoDestino);
+    bool killNodo(int id_Nodo);
+    bool killArco(int id_Arco);
     ~Grafo();
 };
 
 Grafo::Grafo(/* args */)
 {
+}
+
+int Grafo::getCantidadRelaciones(){
+    auto tam = nodos.getSize();
+    int cantidad = 0;
+    for (int i = 0; i < tam; i++)
+        cantidad += nodos[i].getCantidadArcos();
+    return cantidad;
+}
+
+bool Grafo::find(int id){
+    auto tam = nodos.getSize();
+    for (int i = 0; i<tam; i++)
+        if (nodos[i].id() == id)
+            return true;
+    return false;
+}
+
+// Si no encuentra el nodo, lo crea.
+// Por eso seria ideal usar find antes de llamar a get
+Nodo& Grafo::getNodo(int id){
+    auto tam = nodos.getSize();
+    for (int i = 0; i<tam; i++)
+        if (nodos[i].id() == id)
+            return nodos[i];
+
+    Nodo nuevoNodo(id);
+    nodos.push_back(nuevoNodo);
+    return nodos.back();
+}
+
+bool Grafo::addNodo(int id){
+    if (this->find(id))
+        return false;
+    nodos.push_back({id});
+    return true;
 }
 
 Grafo::~Grafo()
