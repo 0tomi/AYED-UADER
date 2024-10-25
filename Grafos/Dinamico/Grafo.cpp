@@ -69,8 +69,8 @@ int Nodo::checkIfRelacionadoCon(int id_Nodo)
 {
     auto tamanio = this->arcos.getSize();
     int founded = 0;
-    for (int i = 0; i < tamanio; i++)
-        if (arcos[i].getNodoDestino()->id() == id_Nodo)
+    for (auto arco: arcos)
+        if (arco.getNodoDestino()->id() == id_Nodo)
             founded++;
 
     return founded;
@@ -78,18 +78,16 @@ int Nodo::checkIfRelacionadoCon(int id_Nodo)
 
 bool Nodo::checkID_ArcoUsada(int id)
 {
-    auto tamanio = arcos.getSize();
-    for (int i = 0; i < tamanio; i++)
-        if (arcos[i].id() == id)
+    for (auto arco: arcos)
+        if (arco.id() == id)
             return true;
     return false;
 }
 
 ListaDE<int> Nodo::getRight(){
     ListaDE<int> NodosRight;
-    auto tam = arcos.getSize();
-    for (int i = 0; i < tam; i++)
-        NodosRight.push_back(arcos[i].id());
+    for (auto arco: arcos)
+        NodosRight.push_back(arco.id());
     return NodosRight;
 }
 
@@ -121,17 +119,15 @@ Grafo::Grafo(/* args */)
 }
 
 int Grafo::getCantidadRelaciones(){
-    auto tam = nodos.getSize();
     int cantidad = 0;
-    for (int i = 0; i < tam; i++)
-        cantidad += nodos[i].getCantidadArcos();
+    for (auto it = nodos.begin(); !it.end(); it++)
+        cantidad += it->getCantidadArcos();
     return cantidad;
 }
 
 bool Grafo::find(int id){
-    auto tam = nodos.getSize();
-    for (int i = 0; i<tam; i++)
-        if (nodos[i].id() == id)
+    for (auto it = nodos.begin(); !it.end(); it++)
+        if (it->id() == id)
             return true;
     return false;
 }
@@ -139,10 +135,9 @@ bool Grafo::find(int id){
 // Si no encuentra el nodo, lo crea.
 // Por eso seria ideal usar find antes de llamar a get
 Nodo& Grafo::getNodo(int id){
-    auto tam = nodos.getSize();
-    for (int i = 0; i<tam; i++)
-        if (nodos[i].id() == id)
-            return nodos[i];
+    for (auto nodo: nodos)
+        if (nodo.id() == id)
+            return nodo;
 
     Nodo nuevoNodo(id);
     nodos.push_back(nuevoNodo);

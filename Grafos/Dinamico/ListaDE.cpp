@@ -7,19 +7,67 @@ struct par {
     T data;
 };
 
+template <class T>
+struct Node{
+    T dato;
+    Node * next;
+    Node * back;
+};
+
+/// ################# Locura iterador ##############
+template <class Dato>
+class Iterador
+{
+    Node<Dato> * nodo;
+public:
+    Iterador(Node<Dato> * nodo);
+    Iterador(const Iterador<Dato>& otro): nodo(otro.nodo) {}
+    bool end() { return this->nodo? false: true; }
+    Iterador<Dato>& operator++();
+    Iterador<Dato> operator++(int);
+    bool operator==(const Iterador<Dato>& otroIterador) { return nodo == otroIterador.nodo; }
+    bool operator!=(const Iterador<Dato>& otroIterador) { return nodo != otroIterador.nodo; }
+    Dato& operator*() { return nodo->dato; }
+    Dato* operator->() { return &(nodo->dato); }
+    ~Iterador();
+};
+
+template <class Dato>
+Iterador<Dato>::Iterador(Node<Dato> * nodo_)
+{
+    this->nodo = nodo_;
+}
+
+template<class Dato>
+Iterador<Dato> Iterador<Dato>::operator++(int)
+{
+    Iterador<Dato> temporal(*this);
+    operator++();
+    return temporal;
+}
+
+template<class Dato>
+Iterador<Dato>& Iterador<Dato>::operator++()
+{
+    if (this->end())
+        return *this;
+    this->nodo = this->nodo->next;
+    return *this;
+}
+
+template <class Dato>
+Iterador<Dato>::~Iterador()
+{
+}
+
 template <class Data>
 class ListaDE{
 private:
-    struct Node{
-        Data dato;
-        Node * next;
-        Node * back;
-    };
-    Node * first;
-    Node * last;
+    Node<Data> * first;
+    Node<Data> * last;
     int size;
-    Node* look(Data dato) {
-        Node* aux = first;
+    Node<Data>* look(Data dato) {
+        Node<Data>* aux = first;
         while (aux != nullptr){
             if (aux->dato == dato)
                 return aux;
@@ -31,6 +79,8 @@ public:
     ListaDE(Data element) {first = last = nullptr; size = 0; push_front(element);}
     ListaDE() {first = last = nullptr; size = 0;}
     ~ListaDE();
+    Iterador<Data> begin() { return Iterador<Data>(first); }
+    Iterador<Data> end() { return { nullptr }; }
     Data& front() { return first->dato; }
     Data& back() { return last->dato; }
     void clear();
@@ -47,11 +97,11 @@ void ListaDE<Data>::push_front(Data data)
 {
     size++; 
     if (first == nullptr){
-        first = last = new Node{data, nullptr, nullptr};
+        first = last = new Node<Data>{data, nullptr, nullptr};
         return;
     }
 
-    first->back = new Node{data, first, nullptr};
+    first->back = new Node<Data>{data, first, nullptr};
     first = first->back;    
 }
 
@@ -60,23 +110,23 @@ void ListaDE<Data>::push_back(Data data)
 {
     size++; 
     if (first == nullptr){
-        first = last = new Node{data, nullptr, nullptr};
+        first = last = new Node<Data>{data, nullptr, nullptr};
         return;
     }
 
-    last->next = new Node{data, nullptr, last};
+    last->next = new Node<Data>{data, nullptr, last};
     last = last->next;   
 }
 
 template<class Data>
 bool ListaDE<Data>::kill(Data dat)
 {
-    Node* dato = this->look(dat);
+    Node<Data>* dato = this->look(dat);
     if (!dato)
         return false;
     
     this->size--;
-    Node * aux;
+
     if (first == last){
         delete first; 
         first = last = nullptr;
@@ -92,12 +142,13 @@ bool ListaDE<Data>::kill(Data dat)
     else last = dato->back;
 
     delete dato;
+    return true;
 }
 
 template<class Data>
 par<Data> ListaDE<Data>::lookFor(Data dato)
 {
-    Node* nodo = look(dato);
+    Node<Data>* nodo = look(dato);
     if (nodo)
         return {true, nodo->dato};
     else return {false};
@@ -106,7 +157,7 @@ par<Data> ListaDE<Data>::lookFor(Data dato)
 template<class Data>
 Data& ListaDE<Data>::operator[](unsigned int n)
 {
-    Node* aux = first;
+    Node<Data>* aux = first;
     while (n) {
         if (aux->next)
             aux = aux->next;
@@ -118,7 +169,7 @@ Data& ListaDE<Data>::operator[](unsigned int n)
 
 template <class Data>
 void ListaDE<Data>::clear(){
-    Node* aux = first;
+    Node<Data>* aux = first;
     while(aux){
         first = first->next;
         delete aux;
@@ -131,30 +182,6 @@ void ListaDE<Data>::clear(){
 template <class Data>
 ListaDE<Data>::~ListaDE(){
     this->clear();
-}
-
-/// ################# Locura iterador ##############
-template <class TomiContenedor, class typeNodo, class Dato>
-class Iterador
-{
-private:
-    Node * nodo;
-public:
-    Iterador(TomiContenedor);
-    void operator++();
-    bool end();
-    Dato& data;
-    ~Iterador();
-};
-
-template <class TomiContenedor, class typeNodo, class Dato>
-Iterador<TomiContenedor, typeNodo, Dato>::Iterador(TomiContenedor cont)
-{
-}
-
-template <class TomiContenedor, class typeNodo, class Dato>
-Iterador<TomiContenedor, typeNodo, Dato>::~Iterador()
-{
 }
 
 #endif // !LISTADE_CPP
