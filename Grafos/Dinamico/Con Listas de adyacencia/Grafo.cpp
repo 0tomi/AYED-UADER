@@ -1,6 +1,11 @@
 #include <iostream>
 using namespace std;
 
+/*
+    CPP con la resolucion de ejercicios de la guia 9.
+    https://fcytvirtual.uader.edu.ar/pluginfile.php/53386/mod_resource/content/3/guia_9_grafosListaAdy.pdf
+*/
+
 struct Arco;
 struct Nodo;
 
@@ -70,7 +75,7 @@ void MostrarNodos(Nodo* lista){
     }
 }
 
-// actividad 2 guia 9
+// actividad 2
 // funcion recursiva para eliminar un arco
 bool killArco(Arco * &arco, int &id_arco){
     if (!arco)
@@ -93,14 +98,33 @@ bool killArco(Nodo* lista, int id_arco, int id_origen, int id_destino){
     return killArco(origen->arcos, id_arco);
 }
 
+// acitvidad 3
+void mostrarNodo(Nodo * nodo){
+    if (!nodo) return;
+
+    cout << "\nNodo " << nodo->id_nodo;
+    auto arco = nodo->arcos;
+    while (arco) {
+        cout << "\n   Arco " << arco->id_arco << " -> Nodo " << arco->nodoDestino->id_nodo;
+        arco = arco->next;
+    }
+}
+
+void MostrarNodos2(Nodo * lista){
+    while (lista){
+        mostrarNodo(lista);
+        lista = lista->next;
+    }
+}
+
 int main(int argc, char const *argv[])
 {
     Nodo * primerNodo = nullptr;
     addNodo(1, primerNodo);
     addNodo(2, primerNodo);
     addArco(primerNodo, 1, 2, 1);
-    killArco(primerNodo, 1, 1, 2);
-    MostrarNodos(primerNodo);
+    //killArco(primerNodo, 1, 1, 2);
+    MostrarNodos2(primerNodo);
 
     return 0;
 }
