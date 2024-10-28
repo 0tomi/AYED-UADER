@@ -37,25 +37,70 @@ Nodo* busqueda (Nodo * nodos, int id_buscada){
     return nodos;
 }
 
+Arco* busqueda(Arco* arco, int id_buscada){
+    while (arco && arco->id_arco != id_buscada)
+        arco = arco->next;
+
+    return arco;
+}
+
 void addArco(Nodo* &first, int id_origen, int id_destino, int id_arco){
     auto origen = busqueda(first, id_origen);
     auto destino = busqueda(first, id_destino);
     if (!origen || !destino)
         return;
 
-    auto aux = origen->arcos;
-    while (aux) {
-        if (aux->id_arco == id_arco)
-            return;
-        aux = aux->next;
-    }
-
+    auto aux = busqueda(origen->arcos, id_arco);
+    if (aux) return;
+    
     aux = new Arco{id_arco, destino, origen->arcos};
     origen->arcos = aux;
+}
+
+void MostrarNodos(Nodo* lista){
+    Arco* aux;
+    while (lista){
+        cout << "\nNodo: " << lista->id_nodo; 
+        aux = lista->arcos;
+        while (aux){
+            cout << "\nArco: " << aux->id_arco << " -> Nodo Destino: " << aux->nodoDestino->id_nodo;
+            aux = aux->next;
+        }
+        lista = lista->next;
+    }
+}
+
+// actividad 2 guia 9
+// funcion recursiva para eliminar un arco
+bool killArco(Arco * &arco, int &id_arco){
+    if (!arco)
+        return false;
+
+    if (arco->id_arco == id_arco) {
+        delete arco; arco = nullptr;
+        return true;
+    } 
+
+    return killArco(arco->next, id_arco);
+}
+
+bool killArco(Nodo* lista, int id_arco, int id_origen, int id_destino){
+    auto origen = busqueda(lista, id_origen);
+    auto destino = busqueda(lista, id_destino);
+    if (!origen || !destino)
+        return false;
+
+    return killArco(origen->arcos, id_arco);
 }
 
 int main(int argc, char const *argv[])
 {
     Nodo * primerNodo = nullptr;
+    addNodo(1, primerNodo);
+    addNodo(2, primerNodo);
+    addArco(primerNodo, 1, 2, 1);
+    killArco(primerNodo, 1, 1, 2);
+    MostrarNodos(primerNodo);
+
     return 0;
 }
