@@ -54,6 +54,41 @@ struct vector{
         this->size = 0;
         this->capacity = 0;
     }
+
+    bool exist(T data) {
+        for (int i = 0; i < this->size; i++)
+            if (this->data[i] == data)
+                return true;
+        return false;                
+    }
+};
+
+template <class T>
+struct pila{
+    struct nodoP{
+        T dato;
+        nodoPila* link = nullptr;
+    };
+    nodoP * first;
+    int size = 0;
+
+    void push(T dato) {
+        size++;
+        if (!first){
+            first = new nodoP{dato};
+            return;
+        }
+
+        nodoP * aux = new nodoP{dato};
+        aux->link = first;
+        first = aux;
+    }
+
+    T pop() {
+        T dato = first->dato;
+        delete first; this->size--;
+        return dato;
+    }
 };
 
 void addNodo(int id_nodo,  Nodo* &first){
@@ -206,22 +241,43 @@ vector<int> getLeft(Nodo * listaNodos, Nodo * nodo){
 }
 
 // consigna 10
-vector<Nodo*> getLeftNodos(Nodo * listaNodos, Nodo * nodo){
-    vector<Nodo*> left;
-    while (listaNodos) {
-        if (isRight(listaNodos, nodo))
-            left.push_back(listaNodos);
-        listaNodos = listaNodos->next;
+// esta funcion se podria readaptar para que 
+// devuelva el camino hacia un nodo.
+bool isConnectedTo(Nodo* destino, Nodo* origen){
+    vector<int> nodos;
+    pila<Nodo*> Pila;
+    Pila.push(origen);
+    while(Pila.size) {
+        origen = Pila.pop();
+        if (destino->id_nodo == origen->id_nodo){
+            nodos.clear();
+            return true;
+        }
+
+        if (nodos.exist(origen->id_nodo)) continue;
+        nodos.push_back(origen->id_nodo);
+
+        auto arcos = origen->arcos;
+        while(arcos) {
+            if (!nodos.exist(arcos->nodoDestino->id_nodo))
+                Pila.push(arcos->nodoDestino);
+            arcos = arcos->next;
+        }
     }
-    return left;
-}
 
-vector<int> getLeftIdeal(Nodo * listaNodos, Nodo * nodo){
+    nodos.clear();
+    return false;
+} 
+
+vector<int> getLeftIdeal (Nodo * nodo, Nodo* lista){
     vector<int> leftIdeal;
-    auto left = getLeftNodos(listaNodos, nodo);
-
+    while (lista) {
+        if (isConnectedTo(nodo, lista))
+            leftIdeal.push_back(lista->id_nodo);
+        lista = lista->next;
+    }
+    return leftIdeal;
 }
-
 
 int main(int argc, char const *argv[])
 {
