@@ -23,6 +23,39 @@ struct Arco{
     // funciones del arco + datos
 };
 
+template <class T>
+struct vector{
+    T * data = nullptr;
+    int size = 0;
+    int capacity = 0;
+    void resize(int cantidad) {
+        T * aux = new T[cantidad];
+        for (int i = 0; i < this->size; i++)
+            aux[i] = data[i];
+
+        if (this->data)
+            delete[] this->data;
+
+        this->data = aux;
+        this->capacity = cantidad;
+    }
+
+    void push_back(T dato) {
+        if (this->size == this->capacity)
+            resize(this->size * 2);
+        
+        this->data[this->size] = dato;
+        this->size++;
+    }
+
+    void clear() {
+        if (this->data)
+            delete[] this->data;
+        this->size = 0;
+        this->capacity = 0;
+    }
+};
+
 void addNodo(int id_nodo,  Nodo* &first){
     auto aux = first;
     while(aux) {
@@ -116,6 +149,79 @@ void MostrarNodos2(Nodo * lista){
         lista = lista->next;
     }
 }
+
+// consigna 6
+int getCantidadArcos(Arco * arco){
+    int cantidad = 0;
+    while (arco) {
+        cantidad++;
+        arco = arco->next;
+    }
+    return cantidad;
+}
+
+// consigna 8
+bool repetido(vector<int> data, int buscar){
+    for (int i = 0; i < data.size; i++)
+        if (buscar == data.data[i])
+            return true;
+    return false;
+}
+
+vector<int> getRight(Nodo * nodo){
+    vector<int> right;
+    int cantidadArcos = getCantidadArcos(nodo->arcos);
+    if (!cantidadArcos)
+        return right;
+
+    auto aux = nodo->arcos;
+    while (aux) {
+        if (!repetido(right, aux->nodoDestino->id_nodo))
+            right.push_back(aux->nodoDestino->id_nodo);
+        aux = aux->next;
+    }
+
+    return right;
+}
+
+// consigna 9
+bool isRight(Nodo * nodoOrigen, Nodo * nodoBuscado){
+    auto arco = nodoOrigen->arcos;
+    while (arco)
+        if (arco->nodoDestino == nodoBuscado)
+            return true;
+        else arco = arco->next;
+
+    return false;
+}
+
+vector<int> getLeft(Nodo * listaNodos, Nodo * nodo){
+    vector<int> left;
+    while (listaNodos) {
+        if (isRight(listaNodos, nodo))
+            left.push_back(listaNodos->id_nodo);
+        listaNodos = listaNodos->next;
+    }
+    return left;
+}
+
+// consigna 10
+vector<Nodo*> getLeftNodos(Nodo * listaNodos, Nodo * nodo){
+    vector<Nodo*> left;
+    while (listaNodos) {
+        if (isRight(listaNodos, nodo))
+            left.push_back(listaNodos);
+        listaNodos = listaNodos->next;
+    }
+    return left;
+}
+
+vector<int> getLeftIdeal(Nodo * listaNodos, Nodo * nodo){
+    vector<int> leftIdeal;
+    auto left = getLeftNodos(listaNodos, nodo);
+
+}
+
 
 int main(int argc, char const *argv[])
 {
