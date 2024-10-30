@@ -64,10 +64,10 @@ struct vector{
 };
 
 template <class T>
-struct pila{
+struct stack{
     struct nodoP{
         T dato;
-        nodoPila* link = nullptr;
+        nodoP* link = nullptr;
     };
     nodoP * first;
     int size = 0;
@@ -85,8 +85,10 @@ struct pila{
     }
 
     T pop() {
+        nodoP* aux = first;
         T dato = first->dato;
-        delete first; this->size--;
+        first = first->link;
+        delete aux; this->size--;
         return dato;
     }
 };
@@ -203,8 +205,11 @@ bool repetido(vector<int> data, int buscar){
     return false;
 }
 
-vector<int> getRight(Nodo * nodo){
+vector<int> getRight(int id_nodo, Nodo * lista){
     vector<int> right;
+    auto nodo = busqueda(lista, id_nodo);
+    if (!nodo) return right;
+
     int cantidadArcos = getCantidadArcos(nodo->arcos);
     if (!cantidadArcos)
         return right;
@@ -222,20 +227,24 @@ vector<int> getRight(Nodo * nodo){
 // consigna 9
 bool isRight(Nodo * nodoOrigen, Nodo * nodoBuscado){
     auto arco = nodoOrigen->arcos;
-    while (arco)
+    while (arco) {
         if (arco->nodoDestino == nodoBuscado)
             return true;
-        else arco = arco->next;
+        arco = arco->next;
+    }
 
     return false;
 }
 
-vector<int> getLeft(Nodo * listaNodos, Nodo * nodo){
+vector<int> getLeft(int id_Nodo, Nodo * lista){
     vector<int> left;
-    while (listaNodos) {
-        if (isRight(listaNodos, nodo))
-            left.push_back(listaNodos->id_nodo);
-        listaNodos = listaNodos->next;
+    auto nodo = busqueda(lista, id_Nodo);
+    if (!nodo) return left;
+
+    while (lista) {
+        if (isRight(lista, nodo))
+            left.push_back(lista->id_nodo);
+        lista = lista->next;
     }
     return left;
 }
@@ -245,10 +254,10 @@ vector<int> getLeft(Nodo * listaNodos, Nodo * nodo){
 // devuelva el camino hacia un nodo.
 bool isConnectedTo(Nodo* destino, Nodo* origen){
     vector<int> nodos;
-    pila<Nodo*> Pila;
-    Pila.push(origen);
-    while(Pila.size) {
-        origen = Pila.pop();
+    stack<Nodo*> Stack;
+    Stack.push(origen);
+    while(Stack.size) {
+        origen = Stack.pop();
         if (destino->id_nodo == origen->id_nodo){
             nodos.clear();
             return true;
@@ -260,7 +269,7 @@ bool isConnectedTo(Nodo* destino, Nodo* origen){
         auto arcos = origen->arcos;
         while(arcos) {
             if (!nodos.exist(arcos->nodoDestino->id_nodo))
-                Pila.push(arcos->nodoDestino);
+                Stack.push(arcos->nodoDestino);
             arcos = arcos->next;
         }
     }
@@ -269,14 +278,52 @@ bool isConnectedTo(Nodo* destino, Nodo* origen){
     return false;
 } 
 
-vector<int> getLeftIdeal (Nodo * nodo, Nodo* lista){
+vector<int> getLeftIdeal (int id_Nodo, Nodo* lista){
     vector<int> leftIdeal;
+    auto nodo = busqueda(lista, id_Nodo);
+    if (!nodo) return leftIdeal;
+
     while (lista) {
-        if (isConnectedTo(nodo, lista))
+        if (isConnectedTo(nodo, lista) && nodo != lista)
             leftIdeal.push_back(lista->id_nodo);
         lista = lista->next;
     }
+
     return leftIdeal;
+}
+
+// consigna inventada por mi
+// es literalmente la misma funcion isConnectedTo, pero te devuelve el vector con los nodos que puede alcanzar.
+void cargarNodosDestino(stack<Nodo*> &pila, vector<int> &lista, Arco* arcos){
+    while(arcos) {
+        if (!lista.exist(arcos->nodoDestino->id_nodo))
+            pila.push(arcos->nodoDestino);
+        arcos = arcos->next;
+    }
+}
+
+vector<int> getRightIdeal(int id_Nodo, Nodo* lista){
+    vector<int> rightIdeal;
+    auto nodo = busqueda(lista, id_Nodo);
+    if (!nodo) return rightIdeal;
+    
+    stack<Nodo*> pila;
+    // Cargamos en la pila los nodos con los que se conecta el nodo
+    // esto es para evitar cargarlo a si mismo en la primer iteracion 
+    // del bucle dentro del right ideal, pero si llegase a estar relacionado
+    // consigo mismo, este si se cargaria porque estaria dentro de sus arcos.
+    cargarNodosDestino(pila, rightIdeal, nodo->arcos);
+
+    while (pila.size) {
+        lista = pila.pop();
+        // evitamos iteraciones extras al pasar por un nodo que ya esta en la lista.
+        if (rightIdeal.exist(lista->id_nodo)) continue;
+        rightIdeal.push_back(lista->id_nodo);
+
+        cargarNodosDestino(pila, rightIdeal, lista->arcos);
+    }
+    
+    return rightIdeal;
 }
 
 int main(int argc, char const *argv[])
@@ -284,9 +331,41 @@ int main(int argc, char const *argv[])
     Nodo * primerNodo = nullptr;
     addNodo(1, primerNodo);
     addNodo(2, primerNodo);
+    addNodo(3, primerNodo);
+    addNodo(4, primerNodo);
     addArco(primerNodo, 1, 2, 1);
+    addArco(primerNodo, 2, 3, 1);
+    addArco(primerNodo, 1, 4, 2);
+    addArco(primerNodo, 4, 3, 1);
+    addArco(primerNodo, 2, 4, 2);
+
+    /*  Representacion:
+            1 -> 2
+            |  / |
+            v .  v   
+            4 -> 3
+    */
+
     //killArco(primerNodo, 1, 1, 2);
     MostrarNodos2(primerNodo);
+
+    auto left = getLeft(3, primerNodo);
+    cout << "\n\nLeft de 3: \n";
+    for (int i = 0; i < left.size; i++)
+        cout << left.data[i] << " | ";
+    left.clear();
+
+    left = getLeftIdeal(3, primerNodo);
+    cout << "\nLeft ideal de 3: \n";
+    for (int i = 0; i < left.size; i++)
+        cout << left.data[i] << " | ";
+    left.clear();
+
+    cout << "\n\nRight ideal de 1: \n";
+    auto right = getRightIdeal(1, primerNodo);
+    for (int i = 0; i < right.size; i++)
+        cout << right.data[i] << " | ";
+    right.clear();
 
     return 0;
 }
