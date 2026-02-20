@@ -12,7 +12,7 @@ Este repositorio centraliza el material de estudio, ejemplos prácticos y resolu
 * **Uso de IA:** Al estar en una etapa de aprendizaje de lógica fundamental, se sugiere **depender lo mínimo de la IA**. Úsala únicamente para contrastar resoluciones después de haber intentado resolver los ejercicios por tu cuenta.
 
 ## 💬 Dudas y Consultas
-Para consultas adicionales, puedes unirte al **Discord de la facultad** (creado por mí) en el siguiente enlace:
+Para consultas adicionales, puedes unirte al **Discord de la facultad** (creado por mí, no oficial) en el siguiente enlace:
 👉 [Invitación al Discord](https://discord.gg/7thPwpdx4R)
 
 ---
